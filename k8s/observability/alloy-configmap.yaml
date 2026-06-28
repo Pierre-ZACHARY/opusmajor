@@ -71,15 +71,14 @@ data:
     loki.process "player_data" {
       forward_to = [loki.write.default.receiver]
 
-      stage.logfmt {
-        mapping = {
-          level = "level",
-        }
+      // Go's default logger prefix can break strict logfmt parsing; extract level robustly.
+      stage.regex {
+        expression = ".*level=(?P<level>[a-zA-Z]+).*"
       }
 
       stage.labels {
         values = {
-          level = "",
+          level = "level",
         }
       }
     }
