@@ -7,6 +7,10 @@ resources:
   - namespace.yaml
   - grafana-datasources-configmap.yaml
   - grafana.yaml
+  - loki-configmap.yaml
+  - loki.yaml
+  - prometheus-configmap.yaml
+  - prometheus.yaml
   - pyroscope-configmap.yaml
   - pyroscope.yaml
   - alloy-rbac.yaml
