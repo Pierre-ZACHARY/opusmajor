@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/pzachary/opusmajor:main
+          image: ghcr.io/pierre-zachary/opusmajor:main
           imagePullPolicy: Always
           ports:
             - name: http

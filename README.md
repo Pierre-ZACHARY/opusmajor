@@ -15,6 +15,10 @@ kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubuse
 - Golang
 https://go.dev/learn/
 - Delve ( go debugger )
+- Vscode launch config are included : 
+  - Run the golang app natively with go delve
+  - Run the app within docker
+  - Send a curl request to retrieve the player-data
 
 # Installation of the application with argocd
 
