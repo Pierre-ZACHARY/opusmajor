@@ -42,6 +42,65 @@ kubectl -n argocd get application player-data
 kubectl -n player-data get deploy,pods,svc,hpa
 ```
 
+## Ingress access with playerdata.minikube
+
+Enable the default Minikube NGINX ingress addon, then Kubernetes will route requests for `playerdata.minikube` to this app through the Ingress resource in this repo. On macOS with Docker driver, keep `minikube tunnel` running in a separate terminal so the ingress address is reachable.
+
+Reference doc:
+https://v1-33.docs.kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+Enable ingress:
+```
+minikube addons enable ingress
+# Verify 
+kubectl get pods -n ingress-nginx
+```
+
+/!\ Important : keep minikube tunnel open to expose the ingress from minikube on your localhost
+```
+minikube tunnel
+```
+
+Add this line to your dns hostnames : 
+```
+127.0.0.1 playerdata.minikube
+```
+
+Test ingress routing:
+```
+curl http://playerdata.minikube/player-data
+```
+
+### Change the root URL suffix
+
+The Ingress host is built as `playerdata.<ROOT_URL>`.
+
+1. Edit `ROOT_URL` in `k8s/player-data/kustomization.yaml`:
+```
+configMapGenerator:
+  - name: player-data-config
+    literals:
+      - ROOT_URL=minikube
+```
+
+2. Replace `minikube` with your own suffix, for example `local`.
+
+3. Re-apply manifests:
+```
+kubectl apply -k k8s/player-data
+```
+
+4. Add/update your local hosts entry to match the new hostname, for example:
+```
+127.0.0.1 playerdata.local
+```
+
+5. Test with the new URL:
+```
+curl http://playerdata.local/player-data
+```
+
+
 # API Documentation (Swagger / OpenAPI)
 
 OpenAPI spec file:

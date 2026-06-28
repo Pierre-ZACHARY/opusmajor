@@ -8,6 +8,30 @@ resources:
   - deployment.yaml
   - service.yaml
   - hpa.yaml
+  - ingress.yaml
+
+configMapGenerator:
+  - name: player-data-config
+    literals:
+      - ROOT_URL=minikube
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: player-data-config
+      fieldPath: data.ROOT_URL
+    targets:
+      - select:
+          kind: Ingress
+          name: player-data
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          delimiter: "."
+          index: 1
 
 labels:
   - pairs:
