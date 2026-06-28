@@ -3,6 +3,30 @@
 ## Minikube Installation
 https://kubernetes.io/fr/docs/tasks/tools/install-minikube/
 
+## Minikube Ingress Prerequisite
+
+Enable the default Minikube NGINX ingress addon. On macOS with Docker driver, keep `minikube tunnel` running in a separate terminal so the ingress address is reachable.
+
+Reference doc:
+https://v1-33.docs.kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+Enable ingress:
+```
+minikube addons enable ingress
+# Verify 
+kubectl get pods -n ingress-nginx
+```
+
+/!\ Important: keep minikube tunnel open to expose ingress on localhost
+```
+minikube tunnel
+```
+
+Add this line to your hosts file:
+```
+127.0.0.1 playerdata.minikube
+```
+
 ## ArgoCD Installation 
 https://argo-cd.readthedocs.io/en/stable/getting_started/
 
@@ -86,33 +110,17 @@ Then open:
 ```
 http://localhost:3000
 ```
+Dashboard link:
+```
+http://localhost:3000/d/afqjcyw0mp91cc/player-data
+```
 Default credentials:
 - Username: `admin`
 - Password: `admin`
 
 ## Ingress access with playerdata.minikube
 
-Enable the default Minikube NGINX ingress addon, then Kubernetes will route requests for `playerdata.minikube` to this app through the Ingress resource in this repo. On macOS with Docker driver, keep `minikube tunnel` running in a separate terminal so the ingress address is reachable.
-
-Reference doc:
-https://v1-33.docs.kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
-
-Enable ingress:
-```
-minikube addons enable ingress
-# Verify 
-kubectl get pods -n ingress-nginx
-```
-
-/!\ Important : keep minikube tunnel open to expose the ingress from minikube on your localhost
-```
-minikube tunnel
-```
-
-Add this line to your dns hostnames : 
-```
-127.0.0.1 playerdata.minikube
-```
+Kubernetes routes requests for `playerdata.minikube` to this app through the Ingress resource in this repo.
 
 Test ingress routing:
 ```
