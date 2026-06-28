@@ -52,7 +52,7 @@ func main() {
 	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	router.GET("/health", func(c *gin.Context) {
-		log.Printf("health check hit")
+		log.Printf("level=debug msg=\"health check hit\"")
 		c.JSON(http.StatusOK, gin.H{
 			"status": "ok",
 		})
@@ -60,7 +60,7 @@ func main() {
 
 	router.GET("/player-data", func(c *gin.Context) {
 		playerDataRequestsTotal.Inc()
-		log.Printf("player data requested")
+		log.Printf("level=info msg=\"player data requested\"")
 		c.JSON(http.StatusOK, gin.H{
 			"player": "demo-player",
 			"level":  7,
@@ -91,7 +91,7 @@ func requestMetricsAndLogs() gin.HandlerFunc {
 		httpRequestsTotal.WithLabelValues(c.Request.Method, path, status).Inc()
 		httpRequestDurationSeconds.WithLabelValues(c.Request.Method, path, status).Observe(time.Since(start).Seconds())
 
-		log.Printf("method=%s path=%s status=%d duration_ms=%d client_ip=%s",
+		log.Printf("level=info msg=\"http request\" method=%s path=%s status=%d duration_ms=%d client_ip=%s",
 			c.Request.Method,
 			path,
 			statusCode,

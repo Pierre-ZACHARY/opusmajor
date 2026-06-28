@@ -65,7 +65,23 @@ data:
 
     loki.source.kubernetes "player_data" {
       targets    = discovery.relabel.player_data_targets.output
+      forward_to = [loki.process.player_data.receiver]
+    }
+
+    loki.process "player_data" {
       forward_to = [loki.write.default.receiver]
+
+      stage.logfmt {
+        mapping = {
+          level = "level",
+        }
+      }
+
+      stage.labels {
+        values = {
+          level = "",
+        }
+      }
     }
 
     prometheus.scrape "player_data" {
