@@ -1,0 +1,99 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Player Data API",
+    "description": "Simple Gin API for player data.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "example": {
+                  "status": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/player-data": {
+      "get": {
+        "summary": "Get player data",
+        "operationId": "getPlayerData",
+        "responses": {
+          "200": {
+            "description": "Current player data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDataResponse"
+                },
+                "example": {
+                  "player": "demo-player",
+                  "level": 7,
+                  "status": "active"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          }
+        }
+      },
+      "PlayerDataResponse": {
+        "type": "object",
+        "required": [
+          "player",
+          "level",
+          "status"
+        ],
+        "properties": {
+          "player": {
+            "type": "string",
+            "example": "demo-player"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32",
+            "example": 7
+          },
+          "status": {
+            "type": "string",
+            "example": "active"
+          }
+        }
+      }
+    }
+  }
+}

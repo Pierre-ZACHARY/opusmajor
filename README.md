@@ -41,3 +41,33 @@ kubectl apply -f https://raw.githubusercontent.com/Pierre-ZACHARY/opusmajor/refs
 kubectl -n argocd get application player-data
 kubectl -n player-data get deploy,pods,svc,hpa
 ```
+
+# API Documentation (Swagger / OpenAPI)
+
+OpenAPI spec file:
+```
+docs/swagger.json
+```
+
+## Render Option 1: Swagger Editor (quickest)
+
+1. Open:
+```
+https://editor.swagger.io/
+```
+2. Click File -> Import File and select:
+```
+docs/swagger.json
+```
+
+## Render Option 2: Swagger UI with Docker (local)
+
+Run:
+```
+docker run --rm -p 8081:8080 -e SWAGGER_JSON=/app/swagger.json -v "$(pwd)/docs/swagger.json:/app/swagger.json" swaggerapi/swagger-ui
+```
+
+Then open:
+```
+http://localhost:8081
+```
