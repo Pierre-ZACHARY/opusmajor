@@ -63,6 +63,33 @@ kubectl -n argocd get application player-data
 kubectl -n player-data get deploy,pods,svc,hpa
 ```
 
+# Installation of the observability stack with argocd
+
+This repository includes a simple test-only observility stack with Grafana, Prometheus, Loki, Pyroscope and Alloy
+
+- Install the Argo CD application:
+```
+kubectl apply -f https://raw.githubusercontent.com/Pierre-ZACHARY/opusmajor/refs/heads/main/argocd/observability-application.yaml
+```
+
+- Check sync/health:
+```
+kubectl -n argocd get application observability
+kubectl -n observability get deploy,pods,svc
+```
+
+- Open Grafana:
+```
+kubectl -n observability port-forward svc/grafana 3000:3000
+```
+Then open:
+```
+http://localhost:3000
+```
+Default credentials:
+- Username: `admin`
+- Password: `admin`
+
 ## Ingress access with playerdata.minikube
 
 Enable the default Minikube NGINX ingress addon, then Kubernetes will route requests for `playerdata.minikube` to this app through the Ingress resource in this repo. On macOS with Docker driver, keep `minikube tunnel` running in a separate terminal so the ingress address is reachable.
