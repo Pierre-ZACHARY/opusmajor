@@ -11,6 +11,27 @@ kubectl create namespace argocd
 kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
+## Open ArgoCD Dashboard
+
+1. Start a port-forward in a dedicated terminal:
+```
+kubectl -n argocd port-forward svc/argocd-server 51242:443
+```
+
+2. Open the dashboard in your browser:
+```
+http://localhost:51242
+```
+
+3. Login with:
+- Username: `admin`
+- Password command:
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode; echo
+```
+
+4. If your browser warns about certificate trust, continue to the page (self-signed cert on local setup).
+
 ## Dev
 - Golang
 https://go.dev/learn/
