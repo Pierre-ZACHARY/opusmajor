@@ -27,8 +27,17 @@ The docker image of the app is published on GHCR
 ghcr.io/pierre-zachary/opusmajor:main
 ```
 
-## How to render the kustomization 
-
+- How to render the kustomization 
 ```
 kubectl kustomize k8s/player-data
+```
+- Install the app in your cluster: 
+```
+kubectl apply -f https://raw.githubusercontent.com/Pierre-ZACHARY/opusmajor/refs/heads/main/argocd/player-data-application.yaml
+```
+
+- Check sync/health:
+```
+kubectl -n argocd get application player-data
+kubectl -n player-data get deploy,pods,svc,hpa
 ```

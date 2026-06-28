@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/pzachary/opusmajor.git
+    repoURL: https://github.com/Pierre-ZACHARY/opusmajor.git
     targetRevision: main
     path: k8s/player-data
   destination:
