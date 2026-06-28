@@ -6,6 +6,8 @@ namespace: observability
 resources:
   - namespace.yaml
   - grafana-datasources-configmap.yaml
+  - grafana-dashboard-provider-configmap.yaml
+  - grafana-dashboards-configmap.yaml
   - grafana.yaml
   - loki-configmap.yaml
   - loki.yaml
