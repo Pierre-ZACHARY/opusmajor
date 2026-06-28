@@ -1,0 +1,127 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy-config
+  namespace: observability
+data:
+  config.alloy: |
+    logging {
+      level  = "info"
+      format = "logfmt"
+    }
+
+    loki.write "default" {
+      endpoint {
+        url = "http://loki.observability.svc.cluster.local:3100/loki/api/v1/push"
+      }
+    }
+
+    prometheus.remote_write "default" {
+      endpoint {
+        url = "http://prometheus.observability.svc.cluster.local:9090/api/v1/write"
+      }
+    }
+
+    discovery.kubernetes "pods" {
+      role = "pod"
+    }
+
+    discovery.relabel "player_data_targets" {
+      targets = discovery.kubernetes.pods.targets
+
+      rule {
+        action        = "drop"
+        source_labels = ["__meta_kubernetes_pod_phase"]
+        regex         = "Succeeded|Failed|Completed"
+      }
+
+      rule {
+        source_labels = ["__meta_kubernetes_namespace"]
+        regex         = "player-data"
+        action        = "keep"
+      }
+
+      rule {
+        source_labels = ["__meta_kubernetes_pod_label_app"]
+        regex         = "player-data"
+        action        = "keep"
+      }
+
+      rule {
+        source_labels = ["__meta_kubernetes_pod_ip"]
+        regex         = "(.+)"
+        replacement   = "${1}:8080"
+        target_label  = "__address__"
+        action        = "replace"
+      }
+
+      rule {
+        source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+        separator     = "/"
+        target_label  = "service_name"
+        action        = "replace"
+      }
+    }
+
+    loki.source.kubernetes "player_data" {
+      targets    = discovery.relabel.player_data_targets.output
+      forward_to = [loki.write.default.receiver]
+    }
+
+    prometheus.scrape "player_data" {
+      targets         = discovery.relabel.player_data_targets.output
+      metrics_path    = "/metrics"
+      scrape_interval = "10s"
+      scheme          = "http"
+      forward_to      = [prometheus.remote_write.default.receiver]
+    }
+
+    pyroscope.write "default" {
+      endpoint {
+        url = "http://pyroscope.observability.svc.cluster.local:4040"
+      }
+    }
+
+    pyroscope.scrape "player_data" {
+      targets = discovery.relabel.player_data_targets.output
+
+      forward_to      = [pyroscope.write.default.receiver]
+      scrape_interval = "15s"
+      scheme          = "http"
+
+      profiling_config {
+        path_prefix = "/debug/pprof"
+
+        profile.process_cpu {
+          enabled = true
+        }
+
+        profile.godeltaprof_memory {
+          enabled = true
+        }
+
+        profile.memory {
+          enabled = false
+        }
+
+        profile.godeltaprof_mutex {
+          enabled = true
+        }
+
+        profile.mutex {
+          enabled = false
+        }
+
+        profile.godeltaprof_block {
+          enabled = true
+        }
+
+        profile.block {
+          enabled = false
+        }
+
+        profile.goroutine {
+          enabled = true
+        }
+      }
+    }

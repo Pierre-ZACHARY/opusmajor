@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pyroscope-config
+  namespace: observability
+data:
+  config.yaml: |
+    server:
+      http_listen_port: 4040
+    storage:
+      backend: filesystem
+      filesystem:
+        dir: /var/lib/pyroscope
+    analytics:
+      reporting_enabled: false
