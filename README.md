@@ -15,3 +15,16 @@ kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubuse
 - Golang
 https://go.dev/learn/
 - Delve ( go debugger )
+
+# Installation of the application with argocd
+
+The docker image of the app is published on GHCR
+```
+ghcr.io/pierre-zachary/opusmajor:main
+```
+
+## How to render the kustomization 
+
+```
+kubectl kustomize k8s/player-data
+```
