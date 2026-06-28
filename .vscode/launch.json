@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run API in Docker (no debugger)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "docker build -t opusmajor-player-data -f ${workspaceFolder}/src/Dockerfile ${workspaceFolder}/src && docker run --rm -p 8080:8080 opusmajor-player-data"
+    },
+    {
+      "name": "Debug Go API",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/src",
+      "cwd": "${workspaceFolder}/src"
+    },
+    {
+      "name": "Request /player-data",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "curl -sS http://localhost:8080/player-data"
+    }
+  ]
+}
