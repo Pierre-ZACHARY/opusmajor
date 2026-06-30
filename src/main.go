@@ -61,6 +61,7 @@ func main() {
 	router.GET("/player-data", func(c *gin.Context) {
 		playerDataRequestsTotal.Inc()
 		log.Printf("level=info msg=\"player data requested\"")
+		log.Printf("level=debug msg=\"request headers\" headers=%v", c.Request.Header)
 		c.JSON(http.StatusOK, gin.H{
 			"player": "demo-player",
 			"level":  7,
@@ -98,5 +99,6 @@ func requestMetricsAndLogs() gin.HandlerFunc {
 			time.Since(start).Milliseconds(),
 			c.ClientIP(),
 		)
+
 	}
 }
